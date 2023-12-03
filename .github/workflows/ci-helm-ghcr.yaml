@@ -47,6 +47,7 @@ jobs:
       - name: helm push
         if: ${{ github.event_name == 'push' }}
         run: |
-          export IMAGE_TAG=${{ needs.prepare-tags.outputs.output1 }}
+          export IMAGE_TAG=${{ needs.prepare-tags.outputs.image_tag }}
+          echo "image-tag: ${IMAGE_TAG}"
           OWNER_NAME=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
           helm push $CHART_NAME-$IMAGE_TAG.tgz oci://ghcr.io/$OWNER_NAME
