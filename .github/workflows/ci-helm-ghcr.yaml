@@ -25,20 +25,14 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v3
-      - name: get chart tag
-        run: |
-          ls -la
-          export CHART_TAG=$(cat "${CHART_NAME}/Chart.yaml" | grep -E '^version:' | awk '{print $2}')
       - name: helm login
         run: |
           echo ${{ secrets.GHCR_TOKEN }} | helm registry login ghcr.io -u $ --password-stdin
       - name: helm package
         run: |
-          echo "image-tag: ${CHART_TAG}"
+          ls -la
+          export CHART_TAG=$(cat "${CHART_NAME}/Chart.yaml" | grep -E '^version:' | awk '{print $2}')
+          echo "chart-tag: ${CHART_TAG}"
           helm package ${CHART_NAME} --version $CHART_TAG
-      - name: helm push
-        if: ${{ github.event_name == 'push' }}
-        run: |
-          echo "image-tag: ${CHART_TAG}"
           OWNER_NAME=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
           helm push $CHART_NAME-$CHART_TAG.tgz oci://ghcr.io/$OWNER_NAME
