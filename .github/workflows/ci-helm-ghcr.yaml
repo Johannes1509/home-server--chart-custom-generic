@@ -1,0 +1,52 @@
+name: ci-helm-ghcr
+env:
+  CHART_NAME: custom-generic
+permissions:
+  packages: write
+  contents: read
+on:
+  push:
+    branches:
+      - main
+      - master
+jobs:
+  prepare-tags:
+    runs-on: ubuntu-latest
+    outputs:
+      image_tag:  ${{ steps.step1.outputs.image_tag }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: get name & tags
+        run: |
+          ls -la
+          IMAGE_TAG=$(cat "${CHART_NAME}/Chart.yaml" | grep -E '^version:' | awk '{print $2})
+          echo "image_tag=${IMAGE_TAG}"
+          echo "chart_name=${CHART_NAME}"
+          echo "image_tag=${IMAGE_TAG}" >> $env:GITHUB_OUTPUT
+  lint:
+    needs: [prepare-tags]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: helm lint
+        run: |
+          helm lint .
+  build-and-upload:
+    needs: [prepare-tags, lint]
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+    steps:
+      - name: helm login
+        run: |
+          echo ${{ secrets.GHCR_TOKEN }} | helm registry login ghcr.io -u $ --password-stdin
+      - name: helm package
+        run: |
+          helm package . --version $IMAGE_TAG
+      - name: helm push
+        if: ${{ github.event_name == 'push' }}
+        run: |
+          export IMAGE_TAG=${{ needs.prepare-tags.outputs.output1 }}
+          OWNER_NAME=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          helm push $CHART_NAME-$IMAGE_TAG.tgz oci://ghcr.io/$OWNER_NAME
