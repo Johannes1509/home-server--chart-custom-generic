@@ -82,7 +82,7 @@ tolerations: []
 affinity: {}
 
 livenessProbe:
-  path: /
+  path: /health
 
 readinessProbe:
-  path: /
+  path: /health
