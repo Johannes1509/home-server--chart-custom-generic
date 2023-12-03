@@ -1,4 +1,4 @@
-name: ci-helm-ghcr
+name: helm-build-and-push
 env:
   CHART_NAME: custom-generic
 permissions:
