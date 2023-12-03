@@ -10,21 +10,7 @@ on:
       - main
       - master
 jobs:
-  prepare-tags:
-    runs-on: ubuntu-latest
-    outputs:
-      image_tag:  ${{ steps.get-tags.outputs.image_tag }}
-    steps:
-      - uses: actions/checkout@v3
-      - id: get-tags
-        run: |
-          ls -la
-          IMAGE_TAG=$(cat "${CHART_NAME}/Chart.yaml" | grep -E '^version:' | awk '{print $2}')
-          echo "image_tag=${IMAGE_TAG}"
-          echo "chart_name=${CHART_NAME}"
-          echo "image_tag=${IMAGE_TAG}" >> $env:GITHUB_OUTPUT
   lint:
-    needs: [prepare-tags]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -32,24 +18,32 @@ jobs:
         run: |
           helm lint ${CHART_NAME}
   build-and-upload:
-    needs: [prepare-tags, lint]
+    needs: [lint]
     runs-on: ubuntu-latest
     permissions:
       packages: write
       contents: read
     steps:
+      prepare-tags:
+    runs-on: ubuntu-latest
+    outputs:
+      image_tag:  ${{ steps.get-tags.outputs.image_tag }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: get chart tag
+        run: |
+          ls -la
+          export CHART_TAG=$(cat "${CHART_NAME}/Chart.yaml" | grep -E '^version:' | awk '{print $2}')
       - name: helm login
         run: |
           echo ${{ secrets.GHCR_TOKEN }} | helm registry login ghcr.io -u $ --password-stdin
       - name: helm package
         run: |
-          export IMAGE_TAG=${{ needs.prepare-tags.outputs.image_tag }}
-          echo "image-tag: ${IMAGE_TAG}"
-          helm package ${CHART_NAME} --version $IMAGE_TAG
+          echo "image-tag: ${CHART_TAG}"
+          helm package ${CHART_NAME} --version $CHART_TAG
       - name: helm push
         if: ${{ github.event_name == 'push' }}
         run: |
-          export IMAGE_TAG=${{ needs.prepare-tags.outputs.image_tag }}
-          echo "image-tag: ${IMAGE_TAG}"
+          echo "image-tag: ${CHART_TAG}"
           OWNER_NAME=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
-          helm push $CHART_NAME-$IMAGE_TAG.tgz oci://ghcr.io/$OWNER_NAME
+          helm push $CHART_NAME-$CHART_TAG.tgz oci://ghcr.io/$OWNER_NAME
