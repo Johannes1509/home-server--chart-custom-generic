@@ -47,6 +47,10 @@ spec:
               port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          {{- if .Values.volumeMounts }}
+          volumeMounts:
+            {{- toYaml .Values.volumeMounts | nindent 12 }}
+          {{- end }}
           {{- if .Values.envConfigMap }}
           envFrom:
           - configMapRef:
@@ -63,4 +67,10 @@ spec:
       {{- with .Values.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
+      {{- end }}
+      hostNetwork: {{ .Values.hostNetwork | default "false" }}
+      dnsPolicy: {{ .Values.dnsPolicy | default "Default"}}
+      {{- if .Values.envConfigMap }}
+      volumes:
+        {{- toYaml .Values.volumes | nindent 8 }}
       {{- end }}
