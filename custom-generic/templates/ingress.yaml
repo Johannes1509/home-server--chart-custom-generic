@@ -20,7 +20,7 @@ metadata:
     {{- include "custom-generic.labels" . | nindent 4 }}
   {{- with .Values.ingress.annotations }}
   annotations:
-    {{- if .Values.externalDns.enabled }}
+    {{- if .Values.ingress.externalDns.enabled }}
     external-dns.alpha.kubernetes.io/hostname: {{ .Release.Name }}.homeserver
     {{- end }}
     {{- toYaml . | nindent 4 }}

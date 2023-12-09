@@ -41,6 +41,8 @@ service:
   port: 8080
 
 ingress:
+  externalDns:
+    enabled: true
   enabled: false
   className: "traefik"
   annotations: {}
