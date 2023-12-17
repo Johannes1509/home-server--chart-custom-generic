@@ -28,7 +28,7 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: {{ .Release.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -69,7 +69,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       hostNetwork: {{ .Values.hostNetwork | default "false" }}
-      dnsPolicy: {{ .Values.dnsPolicy | default "Default"}}
+      dnsPolicy: {{ .Values.dnsPolicy | default "ClusterFirst"}}
       {{- if .Values.volumes }}
       volumes:
         {{- toYaml .Values.volumes | nindent 8 }}
