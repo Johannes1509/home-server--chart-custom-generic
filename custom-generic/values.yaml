@@ -89,3 +89,7 @@ readinessProbe:
   initialDelaySeconds: 30
   periodSeconds: 15
   timeoutSeconds: 5
+
+pv:
+  enabled: false
+  size: 500Mi

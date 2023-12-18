@@ -1,0 +1,15 @@
+{{- if .Values.pv.enabled }}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: pvc-smb-{{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: {{ .Values.pv.size }}
+  volumeName: pv-smb-{{ .Release.Name }}
+  storageClassName: smb
+{{- end }}

@@ -53,9 +53,13 @@ spec:
             timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-          {{- if .Values.volumeMounts }}
+          {{- if or .Values.volumeMounts .Values.pv.enabled }}
           volumeMounts:
             {{- toYaml .Values.volumeMounts | nindent 12 }}
+            {{- if .Values.pv.enabled }}
+            - name: pv-storage
+              mountPath: {{ .Values.pv.mountPath }}
+            {{- end }}
           {{- end }}
           {{- if .Values.envConfigMap }}
           envFrom:
@@ -76,7 +80,12 @@ spec:
       {{- end }}
       hostNetwork: {{ .Values.hostNetwork | default "false" }}
       dnsPolicy: {{ .Values.dnsPolicy | default "ClusterFirst"}}
-      {{- if .Values.volumes }}
+      {{- if or .Values.volumes .Values.pv.enabled }}
       volumes:
         {{- toYaml .Values.volumes | nindent 8 }}
+        {{- if .Values.pv.enabled }}
+        - name: pv-storage
+          persistentVolumeClaim: 
+            claimName: pv-smb-{{ .Release.Name }}
+        {{- end }}
       {{- end }}
