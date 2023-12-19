@@ -20,7 +20,7 @@ metadata:
     {{- include "custom-generic.labels" . | nindent 4 }}
   {{- if .Values.ingress.externalDns.enabled }}
   annotations:
-    external-dns.alpha.kubernetes.io/hostname: {{ .Release.Name }}.homeserver
+    external-dns.alpha.kubernetes.io/hostname: {{ .Release.Name }}.home
   {{- end }}
 spec:
   {{- if and .Values.ingress.className (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion) }}
