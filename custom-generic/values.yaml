@@ -80,14 +80,14 @@ affinity: {}
 
 livenessProbe:
   path: /health
-  initialDelaySeconds: 30
-  periodSeconds: 15
+  initialDelaySeconds: 10
+  periodSeconds: 5
   timeoutSeconds: 5
 
 readinessProbe:
   path: /health
-  initialDelaySeconds: 30
-  periodSeconds: 15
+  initialDelaySeconds: 10
+  periodSeconds: 5
   timeoutSeconds: 5
 
 pv:
