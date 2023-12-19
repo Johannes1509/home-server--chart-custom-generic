@@ -93,3 +93,4 @@ readinessProbe:
 pv:
   enabled: false
   size: 500Mi
+  mountPath: ""
