@@ -19,9 +19,9 @@ spec:
     driver: smb.csi.k8s.io
     # volumeHandle format: {smb-server-address}#{sub-dir-name}#{share-name}
     # make sure this value is unique for every share in the cluster
-    volumeHandle: //192.168.178.1/ESD_USB/k3s/{{ .Release.Name }}#{{ .Release.Name }}
+    volumeHandle: //192.168.178.1/FRITZ.NAS/ESD_USB/k3s/{{ .Release.Name }}#{{ .Release.Name }}
     volumeAttributes:
-      source: //192.168.178.1/ESD_USB/k3s/{{ .Release.Name }}
+      source: //192.168.178.1/FRITZ.NAS/ESD_USB/k3s/{{ .Release.Name }}#{{ .Release.Name }}
     nodeStageSecretRef:
       name: smbcreds
       namespace: kube-system
