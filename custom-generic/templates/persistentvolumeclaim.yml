@@ -15,13 +15,14 @@ spec:
   mountOptions:
     - dir_mode=0777
     - file_mode=0777
+    - noserverino
   csi:
     driver: smb.csi.k8s.io
     # volumeHandle format: {smb-server-address}#{sub-dir-name}#{share-name}
     # make sure this value is unique for every share in the cluster
-    volumeHandle: //192.168.178.1/FRITZ.NAS/ESD_USB/k3s/{{ .Release.Name }}#{{ .Release.Name }}
+    volumeHandle: //192.168.178.1/FRITZ.NAS/ESD_USB/k3s/{{ .Release.Name }}
     volumeAttributes:
-      source: //192.168.178.1/FRITZ.NAS/ESD_USB/k3s/{{ .Release.Name }}#{{ .Release.Name }}
+      source: //192.168.178.1/FRITZ.NAS/ESD_USB/k3s/{{ .Release.Name }}
     nodeStageSecretRef:
       name: smbcreds
       namespace: kube-system
