@@ -72,8 +72,13 @@ autoscaling:
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
 
-nodeSelector:
-  preferredDuringSchedulingIgnoredDuringExecution:
+nodeSelector: {}
+
+tolerations: []
+
+affinity:
+  nodeAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
       - weight: 1
         preference:
           matchExpressions:
@@ -81,10 +86,6 @@ nodeSelector:
             operator: In
             values:
             - false
-
-tolerations: []
-
-affinity: {}
 
 livenessProbe:
   path: /health
