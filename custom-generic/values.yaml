@@ -85,7 +85,7 @@ affinity:
           - key: node-role.kubernetes.io/master
             operator: In
             values:
-            - false
+            - "false"
 
 livenessProbe:
   path: /health
