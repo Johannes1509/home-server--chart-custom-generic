@@ -86,6 +86,6 @@ spec:
         {{- if .Values.pv.enabled }}
         - name: pv-storage
           persistentVolumeClaim: 
-            claimName: pv-smb-{{ .Release.Name }}
+            claimName: pvc-smb-{{ .Release.Name }}
         {{- end }}
       {{- end }}
