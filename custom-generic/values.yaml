@@ -81,11 +81,11 @@ tolerations: []
 affinity:
   nodeAffinity:
     requiredDuringSchedulingIgnoredDuringExecution:
-    - labelSelector:
-          matchExpressions:
-          - key: node-role.kubernetes.io/master
-            operator: DoesNotExist
-            
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: node-role.kubernetes.io/master
+          operator: DoesNotExist
+
 livenessProbe:
   path: /health
   initialDelaySeconds: 10
