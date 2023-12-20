@@ -80,13 +80,12 @@ tolerations: []
 
 affinity:
   nodeAffinity:
-    preferredDuringSchedulingIgnoredDuringExecution:
-      - weight: 1
-        preference:
+    requiredDuringSchedulingIgnoredDuringExecution:
+    - labelSelector:
           matchExpressions:
           - key: node-role.kubernetes.io/master
             operator: DoesNotExist
-
+            
 livenessProbe:
   path: /health
   initialDelaySeconds: 10
