@@ -85,9 +85,7 @@ affinity:
         preference:
           matchExpressions:
           - key: node-role.kubernetes.io/master
-            operator: In
-            values:
-            - "false"
+            operator: DoesNotExist
 
 livenessProbe:
   path: /health
