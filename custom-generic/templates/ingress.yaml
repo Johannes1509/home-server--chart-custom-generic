@@ -21,6 +21,7 @@ metadata:
   {{- if .Values.ingress.externalDns.enabled }}
   annotations:
     external-dns.alpha.kubernetes.io/hostname: {{ .Release.Name }}.home
+    external-dns.alpha.kubernetes.io/target: homemaster
   {{- end }}
 spec:
   {{- if and .Values.ingress.className (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion) }}
